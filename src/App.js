@@ -1,7 +1,7 @@
 import './App.css';
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route
 } from "react-router-dom";
 import Home from './components/Home';
@@ -9,21 +9,25 @@ import About from './components/About';
 import NavBar from './components/NavBar';
 import NoteState from './context/notes/NoteState';
 import Alert from './components/Alert';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
 function App() {
   return (
     <>
-      <NoteState>
-        <Router>
+      <Router>
+        <NoteState>
           <NavBar />
-          <Alert message="this is alert!!"/>
+          <Alert message="this is alert!!" />
           <div className="container">
-            <Switch>
-              <Route exact path="/"><Home /></Route>
-              <Route exact path="/about"><About /></Route>
-            </Switch>
+            <Routes>
+              <Route  path="/" element={<Home />}/>
+              <Route  path="/about" element={<About />}/>
+              <Route  path="/signin" element={<SignIn />}/>
+              <Route  path="/signup" element={<SignUp />}/>
+            </Routes>
           </div>
-        </Router>
-      </NoteState>
+        </NoteState>
+      </Router>
     </>
   );
 }

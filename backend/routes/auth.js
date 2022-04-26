@@ -20,11 +20,13 @@ router.post('/createuser',
 
     ],
     async (req, res) => {
+        let success=false
 
         // if there are error . RETURN bad request and error corrosponds to same
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            success=false
+            return res.status(400).json({ success,errors: errors.array() });
         }
 
         // Check if the same email in database already exists
@@ -33,7 +35,8 @@ router.post('/createuser',
 
             // if user exists through error
             if (user) {
-                return res.status(400).json({ error: "sorry user with this email already exists" })
+                success=false
+                return res.status(400).json({ success,error: "sorry user with this email already exists" })
             }
 
 
@@ -55,8 +58,8 @@ router.post('/createuser',
             }
 
             const authtoken = jwt.sign(data, JWT_SECRET);
-
-            res.json({ authtoken })
+            success=true
+            res.json({ success,authtoken })
         } catch (error) {
 
             // Catch Error of try 
@@ -75,6 +78,7 @@ router.post('/login',
 
     ],
     async (req, res) => {
+        let success=false
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -88,14 +92,16 @@ router.post('/login',
 
             // check if user exists 
             if (!user) {
-                return res.status(400).json({ error: "Please Try To LogIn With Correct Details" })
+                success=false
+                return res.status(400).json({success, error: "Please Try To LogIn With Correct Details" })
             }
 
             const passwordCompare=await bcrypt.compare(password,user.password)
 
             // check for correct password
             if(!passwordCompare){
-                return res.status(400).json({ error: "Please Try To LogIn With Correct Details" })
+                success=false
+                return res.status(400).json({ success,error: "Please Try To LogIn With Correct Details" })
             }
             const data = {
                 user: {
@@ -103,8 +109,8 @@ router.post('/login',
                 }
             }
             const authtoken = jwt.sign(data, JWT_SECRET);
-
-            res.json({ authtoken })
+            success=true
+            res.json({success, authtoken })
 
         } catch (error) {
 
